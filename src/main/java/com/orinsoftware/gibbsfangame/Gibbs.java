@@ -20,13 +20,17 @@ public class Gibbs {
 	private boolean doubleJump;
 	
 	private Directions flipDirection;
+	private boolean flipping;
 	
 	private KeyboardManager keyboardManager;
+	
+	private boolean boosting;
 	
 	private static final double MAX_GROUND_SPEED = 6;
 	private static final double MAX_ACCELERATION_SPEED = 12;
 	private static final double SLOW_DOWN_SPEED = 0.25;
 	private static final double ACCELERATION = 0.1;
+	private static final double BOOST_ACCELERATION = 0.2;
 	
 	private double rotationAngle;
 	
@@ -42,6 +46,7 @@ public class Gibbs {
 		keyboardManager = KeyboardManager.getInstance();
 		
 		flipDirection = Directions.NONE;
+		flipping = false;
 		rotationAngle = 0;
 	}
 	
@@ -51,15 +56,19 @@ public class Gibbs {
 		x += vx;
 		y += vy;
 		
-		if(inTheAir)
+		if( isInTheAir() && !boosting )
 		{
 			applyGravity();
+		}
+		else if( boosting )
+		{
+			setVY(getVY() - BOOST_ACCELERATION);
 		}
 	}
 	
 	public boolean isInTheAir()
 	{
-		return inTheAir;
+		return vy != 0 || flipping;
 	}
 	
 	public void setInTheAir( boolean inTheAir )
@@ -110,7 +119,15 @@ public class Gibbs {
 	
 	public void setVY(double vy)
 	{
+		System.out.println("boosting");
 		this.vy = vy;
+		
+		if( this.vy > MAX_ACCELERATION_SPEED )
+		{
+			this.vy = MAX_ACCELERATION_SPEED;
+		}
+		if( this.vy > MAX_GROUND_SPEED )
+			this.vy -= SLOW_DOWN_SPEED;
 	}
 	
 	public void jump()
@@ -132,6 +149,7 @@ public class Gibbs {
 		if( keyboardManager.getDirection() == Directions.NONE )
 		{
 			doubleJump = false;
+			flipping = false;
 			vy = 0;
 			vy -= 5;
 		}
@@ -172,6 +190,7 @@ public class Gibbs {
 	private void doJump( Directions direction )
 	{
 		doubleJump = false;
+		flipping = true;
 		switch( direction )
 		{
 		case RIGHT:
@@ -242,6 +261,11 @@ public class Gibbs {
 			}
 		}
 		g2d.dispose();
+	}
+	
+	public void setBoosting(boolean boosting)
+	{
+		this.boosting= boosting;
 	}
 
 }

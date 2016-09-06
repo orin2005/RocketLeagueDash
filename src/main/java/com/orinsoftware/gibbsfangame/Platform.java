@@ -9,7 +9,7 @@ public final class Platform {
 	private int y;
 	
 	private int width = 300;
-	private int height = 20;
+	private int height = 10;
 	
 	
 	public Platform(int x, int y) {

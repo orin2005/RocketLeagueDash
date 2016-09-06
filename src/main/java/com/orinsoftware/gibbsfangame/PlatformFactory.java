@@ -24,15 +24,29 @@ public class PlatformFactory {
 	
 	public Platform generatePlatform()
 	{
-		OptionalInt maxOfX = platforms.stream().mapToInt( platform -> platform.getX() ).max();
 		
-		return new Platform( maxOfX.getAsInt() + 400, 300 );
+		System.out.println("num platforms: " + platforms.size());
+		int maxOfX = platforms.stream().mapToInt( platform -> platform.getX() ).max().getAsInt();
+		
+		Platform p = platforms.stream().filter( platform -> platform.getX() == maxOfX).findFirst().get();
+		
+		return new Platform( maxOfX + 500, randomize(p.getY()) );
 		
 	}
 	
 	public void setPlatforms(List<Platform> platforms)
 	{
 		this.platforms = platforms;
+	}
+	
+	private int randomize( int y )
+	{
+		int min = 50;
+		int max = 550;
+		
+		return (int) (Math.random()* (max-min) + min);
+		
+			
 	}
 
 }

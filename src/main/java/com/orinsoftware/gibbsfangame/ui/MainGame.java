@@ -63,7 +63,14 @@ public class MainGame extends JPanel implements KeyListener{
 				List<Platform> removal = 
 						platforms.stream().filter( platform -> platform.getX() + 2000 < gibbs.getX()).collect(Collectors.toList());
 				platforms.removeAll( removal );
+				generatePlatforms();
+				
+				
+				
+				
 				repaint();
+				
+				
 			}
 			
 			
@@ -109,6 +116,9 @@ public class MainGame extends JPanel implements KeyListener{
 			case KeyEvent.VK_UP:
 				gibbs.getKeyboardManager().setDirection(Directions.UP);
 				break;
+			case KeyEvent.VK_Z:
+				gibbs.setBoosting(true);
+				break;
 			}
 		}
 	}
@@ -130,6 +140,10 @@ public class MainGame extends JPanel implements KeyListener{
 		{
 			gibbs.getKeyboardManager().setDirection(Directions.NONE);
 		}
+		if(e.getKeyCode() == KeyEvent.VK_Z)
+		{
+			gibbs.setBoosting(false);
+		}
 			
 	}
 	
@@ -148,6 +162,12 @@ public class MainGame extends JPanel implements KeyListener{
 		platforms.add(pFactory.generatePlatform());
 		platforms.add(pFactory.generatePlatform());
 		platforms.add(pFactory.generatePlatform());
+	}
+	
+	private void generatePlatforms()
+	{
+		if( platforms.stream().mapToInt(platform-> platform.getX()).max().getAsInt() < gibbs.getX()+ 2000)
+			platforms.add(pFactory.generatePlatform());
 	}
 
 }
