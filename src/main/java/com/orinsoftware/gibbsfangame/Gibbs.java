@@ -1,5 +1,9 @@
 package com.orinsoftware.gibbsfangame;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
 import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 
 public class Gibbs {
@@ -15,11 +19,16 @@ public class Gibbs {
 	private boolean inTheAir;
 	private boolean doubleJump;
 	
+	private Directions flipDirection;
+	
 	private KeyboardManager keyboardManager;
 	
-	private static final double MAX_ACCELERATION = 5;
 	private static final double MAX_GROUND_SPEED = 6;
-	private static final double ACCELERATION = 0.00000000001;
+	private static final double MAX_ACCELERATION_SPEED = 12;
+	private static final double SLOW_DOWN_SPEED = 0.25;
+	private static final double ACCELERATION = 0.1;
+	
+	private double rotationAngle;
 	
 	public Gibbs() {
 		x = 0;
@@ -31,6 +40,9 @@ public class Gibbs {
 		width = 50;
 		height = 20;
 		keyboardManager = KeyboardManager.getInstance();
+		
+		flipDirection = Directions.NONE;
+		rotationAngle = 0;
 	}
 	
 	public void move()
@@ -41,7 +53,7 @@ public class Gibbs {
 		
 		if(inTheAir)
 		{
-			gravity();
+			applyGravity();
 		}
 	}
 	
@@ -80,13 +92,15 @@ public class Gibbs {
 		return vx;
 	}
 	
-	public void setVX(double vx)
+	public void setVX( double vx )
 	{
-		this.vx += vx;
-		if( this.vx > MAX_ACCELERATION )
+		this.vx = vx;
+		if( this.vx > MAX_ACCELERATION_SPEED )
 		{
-			this.vx = MAX_ACCELERATION;
+			this.vx = MAX_ACCELERATION_SPEED;
 		}
+		if( this.vx > MAX_GROUND_SPEED )
+			this.vx -= SLOW_DOWN_SPEED;
 	}
 	
 	public double getVY()
@@ -115,7 +129,6 @@ public class Gibbs {
 	
 	private void doubleJump()
 	{
-		System.out.println("doubleJump called");
 		if( keyboardManager.getDirection() == Directions.NONE )
 		{
 			doubleJump = false;
@@ -128,9 +141,14 @@ public class Gibbs {
 		}
 	}
 	
-	private void gravity()
+	private void applyGravity()
 	{
 		vy += 0.163;
+	}
+	
+	public boolean isFalling()
+	{
+		return vy > 0;
 	}
 	
 	public void checkCollision( Platform platform )
@@ -154,11 +172,13 @@ public class Gibbs {
 	private void doJump( Directions direction )
 	{
 		doubleJump = false;
-		switch(direction)
+		switch( direction )
 		{
 		case RIGHT:
 			setVY(0);
 			setVX(getVX()+5);
+			rotate(Directions.RIGHT);
+			rotationAngle = 0.1;
 			break;
 		case LEFT:
 			break;
@@ -166,7 +186,62 @@ public class Gibbs {
 			break;
 		case DOWN:
 			break;
+		case NONE:
+			break;
 		}
+	}
+	
+	private void rotate( Directions direction )
+	{
+		if( direction == Directions.RIGHT )
+		{
+			flipDirection = direction;
+			
+		}
+		else
+			flipDirection = Directions.NONE;
+	}
+	
+	public Directions getFlipDirection( )
+	{
+		return flipDirection;
+	}
+	
+	public Rectangle getRectangle()
+	{
+		return new Rectangle((int)x, (int)y, (int)width, (int)height);
+	}
+	
+	public double getRotationAngle(){
+		return rotationAngle;
+	}
+	
+	public void setRotationAngle(int rotationAngle)
+	{
+		this.rotationAngle = rotationAngle;
+	}
+	
+	public void draw(Graphics g)
+	{
+		Graphics2D g2d = (Graphics2D) g.create();
+		if(rotationAngle == 0)
+		{
+			g2d.draw(getRectangle());
+			g2d.fill(getRectangle());
+		}
+		else
+		{
+			vy = 0;
+			g2d.rotate(rotationAngle, x+width/2, y+height/2);
+			g2d.draw(getRectangle());
+			g2d.fill(getRectangle());
+			rotationAngle += 0.3;
+			if(rotationAngle >= 6.3)
+			{
+				rotationAngle = 0;
+			}
+		}
+		g2d.dispose();
 	}
 
 }

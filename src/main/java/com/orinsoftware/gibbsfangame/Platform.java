@@ -37,7 +37,7 @@ public final class Platform {
 		return height;
 	}
 	
-	public void paint(Graphics g) {
+	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(x, y, width, height);
 	}

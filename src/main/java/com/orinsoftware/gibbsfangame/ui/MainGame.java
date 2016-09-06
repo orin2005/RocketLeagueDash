@@ -2,6 +2,7 @@ package com.orinsoftware.gibbsfangame.ui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -12,13 +13,15 @@ import javax.swing.JPanel;
 
 import com.orinsoftware.gibbsfangame.Camera;
 import com.orinsoftware.gibbsfangame.Gibbs;
+import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 import com.orinsoftware.gibbsfangame.Platform;
 import com.orinsoftware.gibbsfangame.PlatformFactory;
-import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 
 public class MainGame extends JPanel implements KeyListener{
 	
 	private Gibbs gibbs;
+	
+
 	
 	private boolean running;
 	
@@ -51,7 +54,7 @@ public class MainGame extends JPanel implements KeyListener{
 		this.grabFocus();
 		while( running )
 		{
-			if( gameTick + 17 < System.currentTimeMillis() )
+			if( gameTick + 16 < System.currentTimeMillis() )
 			{
 				gibbs.move();
 				gameTick = System.currentTimeMillis();
@@ -60,9 +63,10 @@ public class MainGame extends JPanel implements KeyListener{
 				List<Platform> removal = 
 						platforms.stream().filter( platform -> platform.getX() + 2000 < gibbs.getX()).collect(Collectors.toList());
 				platforms.removeAll( removal );
+				repaint();
 			}
 			
-			repaint();
+			
 		}
 	}
 	
@@ -74,10 +78,10 @@ public class MainGame extends JPanel implements KeyListener{
 		
 		g.translate(-cam.getX(), -cam.getY());
 		
-		g2d.fillRect((int)gibbs.getX(), (int)gibbs.getY(), (int)gibbs.getWidth(), (int)gibbs.getHeight());
+		gibbs.draw(g);
 		
 		platforms.stream()
-			.forEach( platform -> platform.paint( g ) );
+			.forEach( platform -> platform.draw( g ) );
 		
 	}
 
