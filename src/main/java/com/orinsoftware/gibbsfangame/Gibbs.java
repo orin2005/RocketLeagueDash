@@ -56,11 +56,11 @@ public class Gibbs {
 		x += vx;
 		y += vy;
 		
-		if( isInTheAir() && !boosting )
+		if( isInTheAir() )
 		{
 			applyGravity();
 		}
-		else if( boosting )
+		if( boosting )
 		{
 			setVY(getVY() - BOOST_ACCELERATION);
 		}
