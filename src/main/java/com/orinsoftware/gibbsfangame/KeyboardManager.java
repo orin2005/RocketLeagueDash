@@ -19,6 +19,11 @@ public class KeyboardManager
 		this.direction = direction;
 	}
 	
+	public Directions getDirection()
+	{
+		return direction;
+	}
+	
 	public static KeyboardManager getInstance()
 	{
 		if(instance == null)

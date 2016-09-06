@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 
@@ -13,6 +14,7 @@ import com.orinsoftware.gibbsfangame.Camera;
 import com.orinsoftware.gibbsfangame.Gibbs;
 import com.orinsoftware.gibbsfangame.Platform;
 import com.orinsoftware.gibbsfangame.PlatformFactory;
+import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 
 public class MainGame extends JPanel implements KeyListener{
 	
@@ -52,10 +54,12 @@ public class MainGame extends JPanel implements KeyListener{
 			if( gameTick + 17 < System.currentTimeMillis() )
 			{
 				gibbs.move();
-				//camera.setLocation(gibbs);
 				gameTick = System.currentTimeMillis();
 				checkCollisions();
 				cam.update();
+				List<Platform> removal = 
+						platforms.stream().filter( platform -> platform.getX() + 2000 < gibbs.getX()).collect(Collectors.toList());
+				platforms.removeAll( removal );
 			}
 			
 			repaint();
@@ -74,6 +78,7 @@ public class MainGame extends JPanel implements KeyListener{
 		
 		platforms.stream()
 			.forEach( platform -> platform.paint( g ) );
+		
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -84,9 +89,44 @@ public class MainGame extends JPanel implements KeyListener{
 		{
 			gibbs.jump();
 		}
+		else
+		{
+			switch(e.getKeyCode()) 
+			{
+			case KeyEvent.VK_RIGHT:
+				gibbs.getKeyboardManager().setDirection(Directions.RIGHT);
+				break;
+			case KeyEvent.VK_LEFT:
+				gibbs.getKeyboardManager().setDirection(Directions.LEFT);
+				break;
+			case KeyEvent.VK_DOWN:
+				gibbs.getKeyboardManager().setDirection(Directions.DOWN);
+				break;
+			case KeyEvent.VK_UP:
+				gibbs.getKeyboardManager().setDirection(Directions.UP);
+				break;
+			}
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
+		if(gibbs.getKeyboardManager().getDirection() == Directions.LEFT && e.getKeyCode() == KeyEvent.VK_LEFT)
+		{
+			gibbs.getKeyboardManager().setDirection(Directions.NONE);
+		}
+		else if(gibbs.getKeyboardManager().getDirection() == Directions.RIGHT && e.getKeyCode() == KeyEvent.VK_RIGHT)
+		{
+			gibbs.getKeyboardManager().setDirection(Directions.NONE);
+		}
+		else if( gibbs.getKeyboardManager().getDirection() == Directions.UP && e.getKeyCode() == KeyEvent.VK_UP )
+		{
+			gibbs.getKeyboardManager().setDirection(Directions.NONE);
+		}
+		else if( gibbs.getKeyboardManager().getDirection() == Directions.DOWN && e.getKeyCode() == KeyEvent.VK_DOWN )
+		{
+			gibbs.getKeyboardManager().setDirection(Directions.NONE);
+		}
+			
 	}
 	
 	

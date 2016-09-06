@@ -1,5 +1,7 @@
 package com.orinsoftware.gibbsfangame;
 
+import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
+
 public class Gibbs {
 
 	private double x;
@@ -13,22 +15,27 @@ public class Gibbs {
 	private boolean inTheAir;
 	private boolean doubleJump;
 	
-	private long lastTick;
+	private KeyboardManager keyboardManager;
+	
+	private static final double MAX_ACCELERATION = 5;
+	private static final double MAX_GROUND_SPEED = 6;
+	private static final double ACCELERATION = 0.00000000001;
 	
 	public Gibbs() {
 		x = 0;
 		y = 300;
-		vx = 4;
+		vx = 0;
 		vy = 0;
 		inTheAir = false;
 		doubleJump = true;
 		width = 50;
 		height = 20;
-		lastTick = System.currentTimeMillis();
+		keyboardManager = KeyboardManager.getInstance();
 	}
 	
 	public void move()
 	{
+		setVX( getVX() + ACCELERATION );
 		x += vx;
 		y += vy;
 		
@@ -68,12 +75,34 @@ public class Gibbs {
 		return height;
 	}
 	
+	public double getVX()
+	{
+		return vx;
+	}
+	
+	public void setVX(double vx)
+	{
+		this.vx += vx;
+		if( this.vx > MAX_ACCELERATION )
+		{
+			this.vx = MAX_ACCELERATION;
+		}
+	}
+	
+	public double getVY()
+	{
+		return vy;
+	}
+	
+	public void setVY(double vy)
+	{
+		this.vy = vy;
+	}
+	
 	public void jump()
 	{ 
-		System.out.println(inTheAir);
 		if( inTheAir && doubleJump )
 		{
-			
 			doubleJump();
 		}
 		else if( !inTheAir && doubleJump )
@@ -87,9 +116,16 @@ public class Gibbs {
 	private void doubleJump()
 	{
 		System.out.println("doubleJump called");
-		doubleJump = false;
-		vy = 0;
-		vy -= 5;
+		if( keyboardManager.getDirection() == Directions.NONE )
+		{
+			doubleJump = false;
+			vy = 0;
+			vy -= 5;
+		}
+		else
+		{
+			doJump( keyboardManager.getDirection() );
+		}
 	}
 	
 	private void gravity()
@@ -107,6 +143,29 @@ public class Gibbs {
 			inTheAir = false;
 			doubleJump = true;
 			this.y = platform.getY() - this.getHeight();
+		}
+	}
+	
+	public KeyboardManager getKeyboardManager()
+	{
+		return keyboardManager;
+	}
+	
+	private void doJump( Directions direction )
+	{
+		doubleJump = false;
+		switch(direction)
+		{
+		case RIGHT:
+			setVY(0);
+			setVX(getVX()+5);
+			break;
+		case LEFT:
+			break;
+		case UP:
+			break;
+		case DOWN:
+			break;
 		}
 	}
 
