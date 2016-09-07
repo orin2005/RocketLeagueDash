@@ -1,33 +1,42 @@
 package com.orinsoftware.gibbsfangame;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-public class BoostPeanut {
+public class BoostPeanut extends RLDSprite 
+{
 	
-	private double x;
-	private double y;
-	private double width;
-	private double height;
+	private static double WIDTH = 20;
+	private static double HEIGHT = 20;
 	
-	private static double WIDTH = 5;
-	private static double HEIGHT = 5;
+	private boolean pickedUp;
 
-	public BoostPeanut(int x, int y) {
-		this.x = x;
-		this.y = y;
-		width = WIDTH;
-		height = HEIGHT;
+	public BoostPeanut(double x, double y) {
+		super(null,x, y, 0, 0,WIDTH, HEIGHT );
+		pickedUp = false;
 	}
 	
-	public void draw(Graphics g)
+	public boolean isPickedUp()
 	{
-		Color color = g.getColor();
-		
-		g.setColor(Color.yellow);
-		g.drawOval((int)x, (int)y, (int)width, (int)height);
-		
-		g.setColor(color);
+		return pickedUp;
 	}
+	
+	public void setPickedUp(boolean pickedUp)
+	{
+		this.pickedUp = pickedUp;
+	}
+
+	@Override
+	public void render(GraphicsContext gc) {
+		Paint p = gc.getFill();
+		gc.setFill(Color.YELLOW);
+		gc.fillOval( positionX, positionY, width, height );
+		gc.setFill(p);
+		
+	}
+	
+	
+	
 
 }

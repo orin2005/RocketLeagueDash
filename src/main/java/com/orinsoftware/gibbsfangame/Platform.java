@@ -1,44 +1,28 @@
 package com.orinsoftware.gibbsfangame;
 
-import java.awt.Color;
-import java.awt.Graphics;
 
-public final class Platform {
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-	private int x;
-	private int y;
+public final class Platform extends RLDSprite{
+
+	public static final double WIDTH = 300;
 	
-	private int width = 300;
-	private int height = 10;
+	public static final double HEIGHT = 20;
 	
 	
-	public Platform(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public Platform(double x, double y) {
+		super(null, x, y, 0, 0, WIDTH, HEIGHT);
 	}
-	
-	public int getX()
-	{
-		return x;
-	}
-	
-	public int getY()
-	{
-		return y;
-	}
-	
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-	public void draw(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(x, y, width, height);
+
+	@Override
+	public void render(GraphicsContext gc) {
+		// TODO Auto-generated method stub
+		Paint p = gc.getFill();
+		gc.setFill(Color.BLACK);
+		gc.fillRect(positionX, positionY, width, height);
+		gc.setFill(p);
+		
 	}
 }

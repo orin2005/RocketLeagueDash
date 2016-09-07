@@ -1,4 +1,4 @@
-package com.orinsoftware.gibbsfangame.ui;
+package com.orinsoftware.gibbsfangame.fxui;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -6,13 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-/**
- * Deprecated to support JavaFX instead of Swing
- * @author Trentin Thomas
- *
- */
-@Deprecated
-public class MainFrame extends Application{
+public class MainStage extends Application{
 	
 	
 	public static void main(String[] args)
@@ -30,19 +24,18 @@ public class MainFrame extends Application{
 		Scene theScene = new Scene( root );
 		primaryStage.setScene(theScene);
 		
-		MainGame canvas = new MainGame();
+		GameScene canvas = new GameScene();
 		root.getChildren().add(canvas);
 		
-		
-		final long startNanoTime = System.nanoTime();
+		final long lastNanoTime = System.nanoTime();
 		
 		new AnimationTimer()
 		{
 			public void handle(long currentNanoTime)
 			{
-				double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+				double t = (currentNanoTime - lastNanoTime) / 1000000000.0;
 				
-				canvas.run();
+				canvas.update(t);
 			}
 		}.start();
 		

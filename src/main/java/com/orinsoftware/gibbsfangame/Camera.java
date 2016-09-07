@@ -11,13 +11,13 @@ public class Camera {
 	public Camera( Gibbs gibbs ) {
 		// TODO Auto-generated constructor stub
 		this.gibbs = gibbs;
-		x = gibbs.getX() - 800/2;
-		y = gibbs.getY() - 600/2;
+		x = gibbs.getPositionX() - 800/2;
+		y = gibbs.getPositionY() - 600/2;
 	}
 	
 	public void update()
 	{
-		x = gibbs.getX() - 800/2;
+		x = gibbs.getPositionX() - 800/2;
 	}
 	
 	public int getX()

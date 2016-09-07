@@ -1,13 +1,14 @@
 package com.orinsoftware.gibbsfangame;
 
 import java.util.List;
-import java.util.OptionalInt;
 
 public class PlatformFactory {
 
 	private static PlatformFactory instance;
 	
 	private List<Platform> platforms;
+	
+	private List<BoostPeanut> boostPeanuts;
 	
 	private PlatformFactory() {
 		
@@ -22,15 +23,26 @@ public class PlatformFactory {
 		return instance;
 	}
 	
-	public Platform generatePlatform()
+	public Platform generatePlatform(boolean shouldGeneratePeanut)
 	{
 		
 		System.out.println("num platforms: " + platforms.size());
-		int maxOfX = platforms.stream().mapToInt( platform -> platform.getX() ).max().getAsInt();
+		System.out.println("num peanuts: " + boostPeanuts.size());
+		double maxOfX = platforms.stream().mapToDouble( platform -> platform.getPositionX() ).max().getAsDouble();
 		
-		Platform p = platforms.stream().filter( platform -> platform.getX() == maxOfX).findFirst().get();
+		Platform p = platforms.stream().filter( platform -> platform.getPositionX() == maxOfX).findFirst().get();
 		
-		return new Platform( maxOfX + 500, randomize(p.getY()) );
+		double xCoordinate = maxOfX + 500;
+		
+		double yCoordinate = randomize(p.getPositionY());
+		
+		if(shouldGeneratePeanut)
+		{
+			BoostPeanut bp = new BoostPeanut(xCoordinate + p.getWidth()/2, yCoordinate - 40);
+			boostPeanuts.add(bp);
+		}
+		
+		return new Platform( xCoordinate, yCoordinate );
 		
 	}
 	
@@ -39,12 +51,17 @@ public class PlatformFactory {
 		this.platforms = platforms;
 	}
 	
-	private int randomize( int y )
+	public void setBoostPeanuts(List<BoostPeanut> boostPeanuts)
+	{
+		this.boostPeanuts = boostPeanuts;
+	}
+	
+	private double randomize( double y )
 	{
 		int min = 50;
 		int max = 550;
 		
-		return (int) (Math.random()* (max-min) + min);
+		return  (Math.random()* (max-min) + min);
 		
 			
 	}

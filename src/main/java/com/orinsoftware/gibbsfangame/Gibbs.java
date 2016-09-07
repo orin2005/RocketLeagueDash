@@ -1,271 +1,93 @@
 package com.orinsoftware.gibbsfangame;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
-
-public class Gibbs {
-
-	private double x;
-	private double y;
-	private double width;
-	private double height;
+public class Gibbs extends RLDSprite {
 	
-	private double vx;
-	private double vy;
-	
-	private boolean inTheAir;
-	private boolean doubleJump;
-	
-	private Directions flipDirection;
-	private boolean flipping;
-	
-	private KeyboardManager keyboardManager;
-	
-	private boolean boosting;
-	
-	private static final double MAX_GROUND_SPEED = 6;
-	private static final double MAX_ACCELERATION_SPEED = 12;
-	private static final double SLOW_DOWN_SPEED = 0.25;
 	private static final double ACCELERATION = 0.1;
-	private static final double BOOST_ACCELERATION = 0.2;
+	private static final double MAX_SPEED = 1;
+	private static final double GRAVITY = 0.169;
 	
-	private double rotationAngle;
+	private boolean falling;
+
 	
-	public Gibbs() {
-		x = 0;
-		y = 300;
-		vx = 0;
-		vy = 0;
-		inTheAir = false;
-		doubleJump = true;
-		width = 50;
-		height = 20;
-		keyboardManager = KeyboardManager.getInstance();
-		
-		flipDirection = Directions.NONE;
-		flipping = false;
-		rotationAngle = 0;
+	
+	public Gibbs(double x, double y) {
+		super(null, x, y, 0, 0, 50, 30);
+		falling = true;
 	}
 	
-	public void move()
+	@Override
+	public void update(double delta)
 	{
-		setVX( getVX() + ACCELERATION );
-		x += vx;
-		y += vy;
-		
-		if( isInTheAir() )
+		super.update(delta);
+		applyAcceleration();
+		if(falling)
 		{
 			applyGravity();
 		}
-		if( boosting )
-		{
-			setVY(getVY() - BOOST_ACCELERATION);
-		}
-	}
-	
-	public boolean isInTheAir()
-	{
-		return vy != 0 || flipping;
-	}
-	
-	public void setInTheAir( boolean inTheAir )
-	{
-		this.inTheAir = inTheAir;
-	}
-	
-	public double getX()
-	{
-		return x;
-	}
-	
-	public double getY()
-	{
-		return y;
-	}
-	
-	public double getWidth()
-	{
-		return width;
-	}
-	
-	public double getHeight()
-	{
-		return height;
-	}
-	
-	public double getVX()
-	{
-		return vx;
-	}
-	
-	public void setVX( double vx )
-	{
-		this.vx = vx;
-		if( this.vx > MAX_ACCELERATION_SPEED )
-		{
-			this.vx = MAX_ACCELERATION_SPEED;
-		}
-		if( this.vx > MAX_GROUND_SPEED )
-			this.vx -= SLOW_DOWN_SPEED;
-	}
-	
-	public double getVY()
-	{
-		return vy;
-	}
-	
-	public void setVY(double vy)
-	{
-		System.out.println("boosting");
-		this.vy = vy;
-		
-		if( this.vy > MAX_ACCELERATION_SPEED )
-		{
-			this.vy = MAX_ACCELERATION_SPEED;
-		}
-		if( this.vy > MAX_GROUND_SPEED )
-			this.vy -= SLOW_DOWN_SPEED;
-	}
-	
-	public void jump()
-	{ 
-		if( inTheAir && doubleJump )
-		{
-			doubleJump();
-		}
-		else if( !inTheAir && doubleJump )
-		{
-			inTheAir = true;
-			vy = 0;
-			vy -= 5;
-		}
-	}
-	
-	private void doubleJump()
-	{
-		if( keyboardManager.getDirection() == Directions.NONE )
-		{
-			doubleJump = false;
-			flipping = false;
-			vy = 0;
-			vy -= 5;
-		}
 		else
 		{
-			doJump( keyboardManager.getDirection() );
+			this.setVelocityY(0);
+		}
+	}
+
+	@Override
+	public void render(GraphicsContext gc) {
+		Paint p = gc.getFill();
+		gc.setFill(Color.RED);
+		gc.fillRect(positionX, positionY, width, height);
+		gc.setFill(p);
+		
+	}
+	
+	private void applyAcceleration()
+	{
+		this.setVelocityX(this.getVelocityX() + ACCELERATION);
+	}
+	
+	@Override
+	public void setVelocityX( double velocityX)
+	{
+		super.setVelocityX(velocityX);
+		if(this.velocityX > MAX_SPEED)
+		{
+			this.velocityX = MAX_SPEED;
 		}
 	}
 	
-	private void applyGravity()
+	public void applyGravity()
 	{
-		vy += 0.163;
+		this.setVelocityY(this.getVelocityY() + GRAVITY);
+	}
+	
+	public void setFalling(boolean falling)
+	{
+		this.falling = falling;
 	}
 	
 	public boolean isFalling()
 	{
-		return vy > 0;
+		return falling;
 	}
 	
-	public void checkCollision( Platform platform )
+	public void jump()
 	{
-		if( y + height >= platform.getY() 
-				&& y <= platform.getY() + platform.getHeight() 
-				&& x + width >= platform.getX() 
-				&& x <= platform.getX() + platform.getWidth())
+		if( !falling )
 		{
-			inTheAir = false;
-			doubleJump = true;
-			this.y = platform.getY() - this.getHeight();
+			setVelocityY(-5);
 		}
 	}
 	
-	public KeyboardManager getKeyboardManager()
+	@Override
+	public String toString()
 	{
-		return keyboardManager;
-	}
-	
-	private void doJump( Directions direction )
-	{
-		doubleJump = false;
-		flipping = true;
-		switch( direction )
-		{
-		case RIGHT:
-			setVY(0);
-			setVX(getVX()+5);
-			rotate(Directions.RIGHT);
-			rotationAngle = 0.1;
-			break;
-		case LEFT:
-			break;
-		case UP:
-			break;
-		case DOWN:
-			break;
-		case NONE:
-			break;
-		}
-	}
-	
-	private void rotate( Directions direction )
-	{
-		if( direction == Directions.RIGHT )
-		{
-			flipDirection = direction;
-			
-		}
-		else
-			flipDirection = Directions.NONE;
-	}
-	
-	public Directions getFlipDirection( )
-	{
-		return flipDirection;
-	}
-	
-	public Rectangle getRectangle()
-	{
-		return new Rectangle((int)x, (int)y, (int)width, (int)height);
-	}
-	
-	public double getRotationAngle(){
-		return rotationAngle;
-	}
-	
-	public void setRotationAngle(int rotationAngle)
-	{
-		this.rotationAngle = rotationAngle;
-	}
-	
-	public void draw(Graphics g)
-	{
-		Graphics2D g2d = (Graphics2D) g.create();
-		if(rotationAngle == 0)
-		{
-			g2d.draw(getRectangle());
-			g2d.fill(getRectangle());
-		}
-		else
-		{
-			vy = 0;
-			g2d.rotate(rotationAngle, x+width/2, y+height/2);
-			g2d.draw(getRectangle());
-			g2d.fill(getRectangle());
-			rotationAngle += 0.3;
-			if(rotationAngle >= 6.3)
-			{
-				rotationAngle = 0;
-			}
-		}
-		g2d.dispose();
-	}
-	
-	public void setBoosting(boolean boosting)
-	{
-		this.boosting= boosting;
+		return new StringBuilder().append("Gibbs: \n").append("\t")
+				.append("xcoord:"+getPositionX()+"\n").append("\t")
+				.append("ycoord:"+getPositionY()+"\n").append("\t")
+				.toString();
 	}
 
 }
