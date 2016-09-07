@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import com.orinsoftware.gibbsfangame.GameManager;
 
 public class MainStage extends Application{
 	
@@ -29,13 +30,27 @@ public class MainStage extends Application{
 		
 		final long lastNanoTime = System.nanoTime();
 		
+		theScene.setOnKeyPressed( evt -> {
+			switch(evt.getCode())
+			{
+			case SPACE:
+				GameManager.getInstance().getPlayer().jump();
+				break;
+			default:
+				break;
+				
+			}
+		});
+		
+		
+		
 		new AnimationTimer()
 		{
 			public void handle(long currentNanoTime)
 			{
 				double t = (currentNanoTime - lastNanoTime) / 1000000000.0;
 				
-				canvas.update(t);
+				canvas.update( t );
 			}
 		}.start();
 		
