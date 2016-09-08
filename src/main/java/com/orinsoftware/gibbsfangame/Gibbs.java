@@ -1,5 +1,7 @@
 package com.orinsoftware.gibbsfangame;
 
+import com.orinsoftware.gibbsfangame.fxui.GameScene;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -7,16 +9,21 @@ import javafx.scene.paint.Paint;
 public class Gibbs extends RLDSprite {
 	
 	private static final double ACCELERATION = 0.3;
-	private static final double MAX_SPEED = 3;
+	private static final double MAX_SPEED = 0.75;
 	private static final double MAX_FALLING_SPEED = 5;
 	private static final double GRAVITY = 0.169;
+	
+	private static final double JUMP_FORCE = -3.6;
+	
+	private static final int WIDTH = 50;
+	private static final int HEIGHT = 30;
 	
 	private boolean falling;
 	private boolean doubleJump;
 	
 	
 	public Gibbs(double x, double y) {
-		super(null, x, y, 0, 0, 50, 30);
+		super(null, x, y, 0, 0, WIDTH, HEIGHT);
 		falling = true;
 		doubleJump = true;
 	}
@@ -24,10 +31,6 @@ public class Gibbs extends RLDSprite {
 	@Override
 	public void update(double delta)
 	{
-		super.update(delta);
-		
-		GameManager.getInstance().getCamera().update();
-		
 		applyAcceleration();
 		
 		if( falling )
@@ -38,12 +41,16 @@ public class Gibbs extends RLDSprite {
 		{
 			this.setVelocityY(0);
 		}
+		
+		super.update(delta);
+		
+		this.positionX = GameScene.WIDTH/2;
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
 		Paint p = gc.getFill();
-		gc.setFill( Color.RED );
+		gc.setFill( Color.BLUE );
 		gc.fillRect( positionX, positionY, width, height );
 		gc.setFill( p );
 		
@@ -128,11 +135,11 @@ public class Gibbs extends RLDSprite {
 		falling = true;
 		if( firstJump )
 		{
-			this.setVelocityY(-20);
+			this.setVelocityY(JUMP_FORCE);
 		}
 		else
 		{
-			this.setVelocityY(-20);
+			this.setVelocityY(JUMP_FORCE);
 			//need to check for what direction we are pressing
 		}
 	}
@@ -154,6 +161,11 @@ public class Gibbs extends RLDSprite {
 				.append("falling:"+falling+"\n").append("\t")
 				.append("doubleJump:"+doubleJump+"\n").append("\t")
 				.toString();
+	}
+	
+	public boolean notEquals(RLDSprite obj)
+	{
+		return !(this == obj);
 	}
 
 }

@@ -12,8 +12,11 @@ public class GameScene extends Canvas {
 	
 	private GameManager manager;
 	
+	public static final double WIDTH = 1200;
+	public static final double HEIGHT = 800;
+	
 	public GameScene() {
-		super(800,600);
+		super(WIDTH,600);
 		
 		this.setVisible(true);
 		manager = GameManager.getInstance();
@@ -24,21 +27,22 @@ public class GameScene extends Canvas {
 	public void update( double delta )
 	{
 		generatePlatforms();
+		manager.updateAll( delta );
+		
+		manager.getObjects().stream().forEach( obj -> obj.update(delta));
 		
 		checkCollisions();
 		
-		this.setTranslateX(-GameManager.getInstance().getCamera().getX());
-		this.setTranslateY(-GameManager.getInstance().getCamera().getY());
 		
 		manager.renderAll( this.getGraphicsContext2D() );
 		
-		manager.updatePlayer( delta );
+		
 		
 	}
 	
 	private void generateFirstTwoPlatforms()
 	{
-		manager.addObject( new Platform(0, 300) );
+		manager.addObject( new Platform(GameScene.WIDTH/2, 300) );
 		manager.generateNewPlatform();
 	}
 	
@@ -51,12 +55,9 @@ public class GameScene extends Canvas {
 	private void checkCollisions()
 	{
 		
-		
 		Gibbs gibbs = manager.getPlayer();
-		
-		System.out.println(manager.getCamera());
-		
-		
+	
+		boolean shouldBeFalling = true;
 		for( RLDSprite object : manager.getObjects() )
 		{
 			
@@ -65,16 +66,13 @@ public class GameScene extends Canvas {
 				if( object instanceof Platform)
 				{
 					Platform platform = (Platform)object;
-					if( gibbs.getPositionY() + gibbs.getHeight() > platform.getPositionY() )
+					if( gibbs.getPositionY() + gibbs.getHeight() >= platform.getPositionY() 
+							&& (gibbs.getPositionX()+gibbs.getWidth() >= platform.getPositionX()
+									&& gibbs.getPositionX() < platform.getPositionX() + platform.getWidth()))
 					{
-						//we are on top of platform.
-						gibbs.setFalling(false);
+						shouldBeFalling = false;
 						gibbs.setDoubleJump(true);
-						gibbs.setPositionY(platform.getPositionY() - gibbs.getHeight());
-					}
-					else
-					{
-						gibbs.setFalling(true);
+						gibbs.setPositionY( platform.getPositionY() - gibbs.getHeight()+1 );
 					}
 				}
 				else
@@ -85,6 +83,7 @@ public class GameScene extends Canvas {
 				}
 			}
 		}
+		gibbs.setFalling(shouldBeFalling);
 	}
 	
 

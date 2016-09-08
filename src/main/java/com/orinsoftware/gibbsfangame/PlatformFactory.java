@@ -26,7 +26,7 @@ public class PlatformFactory {
 		
 		RLDSprite p = GameManager.getInstance().getObjects().stream().filter( platform -> platform.getPositionX() == maxOfX).findFirst().get();
 		
-		double xCoordinate = maxOfX + 500;
+		double xCoordinate = maxOfX + Platform.WIDTH + 100;
 		
 		double yCoordinate = randomize(p.getPositionY());
 		

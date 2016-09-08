@@ -7,13 +7,21 @@ import javafx.scene.paint.Paint;
 
 public final class Platform extends RLDSprite{
 
-	public static final double WIDTH = 300;
+	public static final double WIDTH = 500;
 	
 	public static final double HEIGHT = 20;
 	
+	public static int id;
+	
+	private int pid;
+	
+	static {
+		id = 0;
+	}
 	
 	public Platform(double x, double y) {
 		super(null, x, y, 0, 0, WIDTH, HEIGHT);
+		pid = id++;
 	}
 
 	@Override

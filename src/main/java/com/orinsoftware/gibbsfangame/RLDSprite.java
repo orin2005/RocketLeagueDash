@@ -31,7 +31,7 @@ public abstract class RLDSprite {
 		this.height = height;
 	}
 	
-	public void update(double time)
+	public void update( double time )
 	{
 		positionX += velocityX * time;
 		positionY += velocityY * time;

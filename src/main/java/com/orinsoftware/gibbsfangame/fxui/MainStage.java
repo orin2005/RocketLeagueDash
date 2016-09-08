@@ -6,9 +6,9 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.effect.PerspectiveTransform;
+import javafx.scene.effect.PerspectiveTransformBuilder;
 import javafx.stage.Stage;
-import javafx.scene.Camera;
-import javafx.scene.PerspectiveCamera;
 
 public class MainStage extends Application{
 	
@@ -32,7 +32,6 @@ public class MainStage extends Application{
 		
 		GameScene canvas = new GameScene();
 		root.getChildren().add(canvas);
-		primaryStage.sizeToScene();
 		
 		final long lastNanoTime = System.nanoTime();
 		
@@ -57,12 +56,6 @@ public class MainStage extends Application{
 			public void handle(long currentNanoTime)
 			{
 				double t = (currentNanoTime - lastNanoTime) / 1000000000.0;
-				
-				//theScene.getCamera().setTranslateX(GameManager.getInstance().getCamera().getX());
-				//theScene.getCamera().setTranslateY(GameManager.getInstance().getCamera().getY());
-				
-				//((PerspectiveCamera)theScene.getCamera()).setVerticalFieldOfView(false);
-				//((PerspectiveCamera)theScene.getCamera()).setFieldOfView(GameManager.getInstance().getCamera().getX());;
 				
 				canvas.update( t );
 			}

@@ -3,6 +3,8 @@ package com.orinsoftware.gibbsfangame;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.orinsoftware.gibbsfangame.fxui.GameScene;
+
 import javafx.scene.canvas.GraphicsContext;
 
 public class GameManager {
@@ -36,14 +38,21 @@ public class GameManager {
 	
 	public void renderAll(GraphicsContext gc)
 	{
-		gc.clearRect(camera.getX(),camera.getY(), 800, 800);
+		gc.clearRect(0,0, GameScene.WIDTH, GameScene.HEIGHT);
 
 		gameObjects.stream().forEach( obj -> obj.render( gc ) );
 	}
 	
-	public void updatePlayer( double delta )
+	public void updateAll( double delta )
 	{
-		gibbs.update(delta);
+		
+		gameObjects.stream().forEach( obj -> {
+			if(obj != gibbs)
+			{
+				obj.setVelocityX(-gibbs.getVelocityX());
+				obj.update(delta); 
+			}
+		});
 	}
 	
 	public void generateNewPlatform()
