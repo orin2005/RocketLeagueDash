@@ -13,7 +13,8 @@ public class GameScene extends Canvas {
 	private GameManager manager;
 	
 	public GameScene() {
-		super(800, 600);
+		super(800,600);
+		
 		this.setVisible(true);
 		manager = GameManager.getInstance();
 		generateFirstTwoPlatforms();
@@ -25,6 +26,9 @@ public class GameScene extends Canvas {
 		generatePlatforms();
 		
 		checkCollisions();
+		
+		this.setTranslateX(-GameManager.getInstance().getCamera().getX());
+		this.setTranslateY(-GameManager.getInstance().getCamera().getY());
 		
 		manager.renderAll( this.getGraphicsContext2D() );
 		
@@ -50,7 +54,7 @@ public class GameScene extends Canvas {
 		
 		Gibbs gibbs = manager.getPlayer();
 		
-		System.out.println(gibbs.toString());
+		System.out.println(manager.getCamera());
 		
 		
 		for( RLDSprite object : manager.getObjects() )

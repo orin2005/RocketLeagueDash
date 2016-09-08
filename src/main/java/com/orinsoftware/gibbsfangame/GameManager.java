@@ -10,13 +10,13 @@ public class GameManager {
 	private static GameManager instance;
 	
 	private Gibbs gibbs;
-	private Camera camera;
+	private PlayerCamera camera;
 	private List<RLDSprite> gameObjects;
 	private PlatformFactory pFactory;
 	
 	private GameManager() {
 		gibbs = new Gibbs(0,200);
-		camera = new Camera( gibbs );
+		camera = new PlayerCamera( gibbs );
 		gameObjects = new ArrayList<RLDSprite>();
 		gameObjects.add( gibbs );
 		pFactory = PlatformFactory.getInstance();
@@ -37,7 +37,7 @@ public class GameManager {
 	public void renderAll(GraphicsContext gc)
 	{
 		gc.clearRect(camera.getX(),camera.getY(), 800, 800);
-		gc.translate(cam.getX(), y);
+
 		gameObjects.stream().forEach( obj -> obj.render( gc ) );
 	}
 	
@@ -61,7 +61,7 @@ public class GameManager {
 		return gameObjects;
 	}
 	
-	public Camera getCamera()
+	public PlayerCamera getCamera()
 	{
 		return camera;
 	}
