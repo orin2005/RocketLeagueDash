@@ -37,6 +37,7 @@ public class GameManager {
 	public void renderAll(GraphicsContext gc)
 	{
 		gc.clearRect(camera.getX(),camera.getY(), 800, 800);
+		gc.translate(cam.getX(), y);
 		gameObjects.stream().forEach( obj -> obj.render( gc ) );
 	}
 	
