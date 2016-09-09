@@ -15,29 +15,32 @@ public class GameScene extends Canvas {
 	public static final double WIDTH = 1200;
 	public static final double HEIGHT = 800;
 	
+	private long lastNanoTime;
+	
 	public GameScene() {
 		super(WIDTH,600);
 		
 		this.setVisible(true);
 		manager = GameManager.getInstance();
 		generateFirstTwoPlatforms();
-
+		lastNanoTime = System.nanoTime();
 	}
 	
 	public void update( double delta )
 	{
-		generatePlatforms();
-		manager.updateAll( delta );
 		
-		manager.getObjects().stream().forEach( obj -> obj.update(delta));
+		double t = (delta - lastNanoTime) / 1000000000.0;
+		generatePlatforms();
+		manager.updateAll( t );
+		
+		manager.getObjects().stream().forEach( obj -> obj.update(t));
 		
 		checkCollisions();
 		
 		
 		manager.renderAll( this.getGraphicsContext2D() );
 		
-		
-		
+		lastNanoTime = System.nanoTime();
 	}
 	
 	private void generateFirstTwoPlatforms()

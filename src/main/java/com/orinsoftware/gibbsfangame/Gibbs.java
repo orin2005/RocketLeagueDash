@@ -1,5 +1,6 @@
 package com.orinsoftware.gibbsfangame;
 
+import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 import com.orinsoftware.gibbsfangame.fxui.GameScene;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -8,17 +9,20 @@ import javafx.scene.paint.Paint;
 
 public class Gibbs extends RLDSprite {
 	
-	private static final double ACCELERATION = 0.3;
-	private static final double MAX_SPEED = 0.75;
-	private static final double MAX_FALLING_SPEED = 5;
-	private static final double GRAVITY = 0.169;
+	private static final double ACCELERATION = 10;
+	private static final double MAX_SPEED = 400;
+	private static final double MAX_FALLING_SPEED = 1000;
+	private static final double GRAVITY = 25;
 	
-	private static final double JUMP_FORCE = -3.6;
+	private static final double JUMP_FORCE = -750;
 	
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 30;
 	
+	private double rotationAngle;
+	
 	private boolean falling;
+	private boolean flipping;
 	private boolean doubleJump;
 	
 	
@@ -26,6 +30,8 @@ public class Gibbs extends RLDSprite {
 		super(null, x, y, 0, 0, WIDTH, HEIGHT);
 		falling = true;
 		doubleJump = true;
+		flipping = false;
+		rotationAngle = 0;
 	}
 	
 	@Override
@@ -33,7 +39,8 @@ public class Gibbs extends RLDSprite {
 	{
 		applyAcceleration();
 		
-		if( falling )
+		
+		if( falling && !flipping )
 		{
 			applyGravity();
 		}
@@ -51,7 +58,22 @@ public class Gibbs extends RLDSprite {
 	public void render(GraphicsContext gc) {
 		Paint p = gc.getFill();
 		gc.setFill( Color.BLUE );
+		if( flipping )
+		{
+			System.out.println("flipping");
+			rotationAngle += 1;
+			gc.rotate(rotationAngle);
+			
+			if(rotationAngle == 360)
+			{
+				rotationAngle = 0;
+				flipping = false;
+			}
+		}
+			
 		gc.fillRect( positionX, positionY, width, height );
+		if( flipping )
+			gc.rotate(-rotationAngle);
 		gc.setFill( p );
 		
 	}
@@ -102,6 +124,16 @@ public class Gibbs extends RLDSprite {
 		return falling;
 	}
 	
+	public boolean isFlipping()
+	{
+		return flipping;
+	}
+	
+	public void setFlipping(boolean flipping)
+	{
+		this.flipping = flipping;
+	}
+	
 	public void setDoubleJump(boolean doubleJump)
 	{
 		this.doubleJump = doubleJump;
@@ -139,9 +171,24 @@ public class Gibbs extends RLDSprite {
 		}
 		else
 		{
-			this.setVelocityY(JUMP_FORCE);
+			System.out.println(KeyboardManager.getInstance().getDirection());
+			switch( KeyboardManager.getInstance().getDirection() )
+			{
+			case NONE:
+				this.setVelocityY(JUMP_FORCE);
+				break;
+			case RIGHT:
+				doFlip();
+				break;
+			}
+			
 			//need to check for what direction we are pressing
 		}
+	}
+	
+	private void doFlip()
+	{
+		flipping = true;
 	}
 	
 	public void consume( BoostPeanut bp )

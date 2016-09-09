@@ -1,13 +1,13 @@
 package com.orinsoftware.gibbsfangame.fxui;
 
 import com.orinsoftware.gibbsfangame.GameManager;
+import com.orinsoftware.gibbsfangame.KeyboardManager;
+import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.effect.PerspectiveTransform;
-import javafx.scene.effect.PerspectiveTransformBuilder;
 import javafx.stage.Stage;
 
 public class MainStage extends Application{
@@ -33,13 +33,14 @@ public class MainStage extends Application{
 		GameScene canvas = new GameScene();
 		root.getChildren().add(canvas);
 		
-		final long lastNanoTime = System.nanoTime();
-		
 		theScene.setOnKeyPressed( evt -> {
 			switch(evt.getCode())
 			{
 			case SPACE:
 				GameManager.getInstance().getPlayer().jump();
+				break;
+			case RIGHT:
+				KeyboardManager.getInstance().setDirection(Directions.RIGHT);
 				break;
 			default:
 				break;
@@ -47,17 +48,26 @@ public class MainStage extends Application{
 			}
 		});
 		
+		theScene.setOnKeyReleased( evt -> {
+			
+			switch(evt.getCode())
+			{
+			case RIGHT:
+				KeyboardManager.getInstance().setDirection(Directions.NONE);
+				break;
+			}
+		});
+		
 		//theScene.setCamera(new PerspectiveCamera());
 		
-		
+		final long lastNanoTime = System.nanoTime();
 		
 		new AnimationTimer()
 		{
 			public void handle(long currentNanoTime)
 			{
-				double t = (currentNanoTime - lastNanoTime) / 1000000000.0;
 				
-				canvas.update( t );
+				canvas.update( currentNanoTime );
 			}
 		}.start();
 		
