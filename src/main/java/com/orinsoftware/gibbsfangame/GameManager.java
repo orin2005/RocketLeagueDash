@@ -50,8 +50,9 @@ public class GameManager {
 			if(obj != gibbs)
 			{
 				obj.setVelocityX(-gibbs.getVelocityX());
-				obj.update(delta); 
+
 			}
+			obj.update(delta); 
 		});
 	}
 	
@@ -73,6 +74,14 @@ public class GameManager {
 	public PlayerCamera getCamera()
 	{
 		return camera;
+	}
+	
+	public void createNewGame()
+	{
+//		gibbs = new Gibbs(0,200);
+//		gameObjects.clear();
+//		gameObjects.add(gibbs);
+//		System.out.println("Cleared");
 	}
 
 }

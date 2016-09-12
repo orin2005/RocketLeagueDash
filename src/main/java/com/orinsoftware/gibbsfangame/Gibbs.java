@@ -1,6 +1,5 @@
 package com.orinsoftware.gibbsfangame;
 
-import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
 import com.orinsoftware.gibbsfangame.fxui.GameScene;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -10,9 +9,12 @@ import javafx.scene.paint.Paint;
 public class Gibbs extends RLDSprite {
 	
 	private static final double ACCELERATION = 10;
-	private static final double MAX_SPEED = 400;
+	private static final double DECELERATION = 3;
+	private static final double MAX_SPEED = 800;
+	private static final double MAX_GROUND_SPEED = 400;
 	private static final double MAX_FALLING_SPEED = 1000;
 	private static final double GRAVITY = 25;
+	private static final double FLIP_MOMENTUM = 200;
 	
 	private static final double JUMP_FORCE = -750;
 	
@@ -37,7 +39,11 @@ public class Gibbs extends RLDSprite {
 	@Override
 	public void update(double delta)
 	{
-		applyAcceleration();
+		super.update(delta);
+		if( getVelocityX() < MAX_GROUND_SPEED )
+			applyAcceleration();
+		else
+			decelerate();
 		
 		
 		if( falling && !flipping )
@@ -49,31 +55,49 @@ public class Gibbs extends RLDSprite {
 			this.setVelocityY(0);
 		}
 		
-		super.update(delta);
 		
-		this.positionX = GameScene.WIDTH/2;
+		
+		this.positionX = GameScene.WIDTH/2-width/2;
+		
+		if( positionY > 800 )
+		{
+			//TODO fell off, reset.
+			GameManager.getInstance().createNewGame();
+		}
 	}
 
 	@Override
 	public void render(GraphicsContext gc) {
 		Paint p = gc.getFill();
 		gc.setFill( Color.BLUE );
+		
+		gc.translate(positionX,positionY);
+		
 		if( flipping )
 		{
+			setVelocityX(getVelocityX()+FLIP_MOMENTUM);
 			System.out.println("flipping");
-			rotationAngle += 1;
+			rotationAngle += 20;
+			gc.translate(width/2, height/2);
 			gc.rotate(rotationAngle);
+			//TODO replace with image.
+			gc.fillRect( -width/2, -height/2, width, height );
+			gc.rotate(-rotationAngle);
+			gc.translate(-(width/2), -(height/2));
 			
 			if(rotationAngle == 360)
 			{
 				rotationAngle = 0;
 				flipping = false;
+				
 			}
 		}
+		else
+		{
+			gc.fillRect(0,  0,  width,  height);
+		}
 			
-		gc.fillRect( positionX, positionY, width, height );
-		if( flipping )
-			gc.rotate(-rotationAngle);
+		gc.translate(-positionX,-positionY);
 		gc.setFill( p );
 		
 	}
@@ -87,6 +111,7 @@ public class Gibbs extends RLDSprite {
 	public void setVelocityX( double velocityX)
 	{
 		super.setVelocityX(velocityX);
+		
 		
 		if(this.velocityX > MAX_SPEED)
 		{
@@ -213,6 +238,11 @@ public class Gibbs extends RLDSprite {
 	public boolean notEquals(RLDSprite obj)
 	{
 		return !(this == obj);
+	}
+	
+	private void decelerate()
+	{
+		this.setVelocityX(getVelocityX() - DECELERATION); 
 	}
 
 }

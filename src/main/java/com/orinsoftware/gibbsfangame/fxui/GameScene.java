@@ -1,5 +1,7 @@
 package com.orinsoftware.gibbsfangame.fxui;
 
+import java.util.Objects;
+
 import com.orinsoftware.gibbsfangame.BoostPeanut;
 import com.orinsoftware.gibbsfangame.GameManager;
 import com.orinsoftware.gibbsfangame.Gibbs;
@@ -30,12 +32,13 @@ public class GameScene extends Canvas {
 	{
 		
 		double t = (delta - lastNanoTime) / 1000000000.0;
-		generatePlatforms();
-		manager.updateAll( t );
-		
-		manager.getObjects().stream().forEach( obj -> obj.update(t));
-		
 		checkCollisions();
+		manager.updateAll( t );
+		generatePlatforms();
+		
+		//manager.getObjects().stream().filter(Objects::nonNull).forEach( obj -> obj.update(t));
+		
+		
 		
 		
 		manager.renderAll( this.getGraphicsContext2D() );
@@ -51,6 +54,10 @@ public class GameScene extends Canvas {
 	
 	private void generatePlatforms()
 	{	
+		if( manager.getObjects().isEmpty() )
+		{
+			generateFirstTwoPlatforms();
+		}
 		if( manager.getObjects().stream().mapToDouble( platform-> platform.getPositionX() ).max().getAsDouble() < manager.getPlayer().getPositionX()+ 2000)
 			manager.generateNewPlatform();
 	}
