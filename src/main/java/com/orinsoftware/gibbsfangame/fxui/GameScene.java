@@ -1,7 +1,5 @@
 package com.orinsoftware.gibbsfangame.fxui;
 
-import java.util.Objects;
-
 import com.orinsoftware.gibbsfangame.BoostPeanut;
 import com.orinsoftware.gibbsfangame.GameManager;
 import com.orinsoftware.gibbsfangame.Gibbs;
@@ -32,11 +30,10 @@ public class GameScene extends Canvas {
 	{
 		
 		double t = (delta - lastNanoTime) / 1000000000.0;
-		checkCollisions();
-		manager.updateAll( t );
-		generatePlatforms();
 		
-		//manager.getObjects().stream().filter(Objects::nonNull).forEach( obj -> obj.update(t));
+		manager.updateAll( t );
+		checkCollisions();
+		generatePlatforms();
 		
 		
 		
@@ -73,16 +70,16 @@ public class GameScene extends Canvas {
 			
 			if( gibbs.intersects(object) && gibbs != object )
 			{
-				if( object instanceof Platform)
+				//System.out.println("Intersect with " + object);
+				//GameManager.compareObjects(gibbs, object);
+				if( object instanceof Platform )
 				{
-					Platform platform = (Platform)object;
-					if( gibbs.getPositionY() + gibbs.getHeight() >= platform.getPositionY() 
-							&& (gibbs.getPositionX()+gibbs.getWidth() >= platform.getPositionX()
-									&& gibbs.getPositionX() < platform.getPositionX() + platform.getWidth()))
+					Platform platform = (Platform)object;					
+					if( gibbs.getVelocityY() >= 0)
 					{
+						gibbs.setPositionY( platform.getPositionY() - gibbs.getHeight()+1 );
 						shouldBeFalling = false;
 						gibbs.setDoubleJump(true);
-						gibbs.setPositionY( platform.getPositionY() - gibbs.getHeight()+1 );
 					}
 				}
 				else

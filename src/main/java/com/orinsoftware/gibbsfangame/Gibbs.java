@@ -9,14 +9,14 @@ import javafx.scene.paint.Paint;
 public class Gibbs extends RLDSprite {
 	
 	private static final double ACCELERATION = 10;
-	private static final double DECELERATION = 3;
+	private static final double DECELERATION = 1;
 	private static final double MAX_SPEED = 800;
 	private static final double MAX_GROUND_SPEED = 400;
 	private static final double MAX_FALLING_SPEED = 1000;
 	private static final double GRAVITY = 25;
 	private static final double FLIP_MOMENTUM = 200;
 	
-	private static final double JUMP_FORCE = -750;
+	private static final double JUMP_FORCE = -600;
 	
 	private static final int WIDTH = 50;
 	private static final int HEIGHT = 30;

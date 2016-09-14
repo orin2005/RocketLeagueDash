@@ -1,5 +1,6 @@
 package com.orinsoftware.gibbsfangame;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +83,15 @@ public class GameManager {
 //		gameObjects.clear();
 //		gameObjects.add(gibbs);
 //		System.out.println("Cleared");
+	}
+	
+	public static void compareObjects( Gibbs s, RLDSprite g )
+	{
+		PrintStream o = System.out;
+		
+		o.println("Gibbs: ( "+ ((int)s.getPositionX()) +"," + ((int)s.getPositionY()) + " )" + "\twidth: " + s.getWidth() + "\theight: "+s.getHeight());
+		o.println("RLDObject: ( "+ ((int)g.getPositionX()) +"," + ((int)g.getPositionY()) + " )" + "\twidth: " + g.getWidth() + "\theight: "+g.getHeight());;
+		o.println();
 	}
 
 }
