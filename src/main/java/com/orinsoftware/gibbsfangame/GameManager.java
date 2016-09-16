@@ -79,6 +79,7 @@ public class GameManager {
 	
 	public void createNewGame()
 	{
+		gibbs = new Gibbs(0,200);
 		gibbs.setPositionX(0);
 		gibbs.setPositionY(200);
 		gameObjects.clear();
