@@ -32,6 +32,10 @@ public class GameScene extends Canvas {
 		double t = (delta - lastNanoTime) / 1000000000.0;
 		
 		manager.updateAll( t );
+		if( manager.getPlayer().getPositionY() > 800 )
+		{
+			GameManager.getInstance().createNewGame();
+		}
 		checkCollisions();
 		generatePlatforms();
 		

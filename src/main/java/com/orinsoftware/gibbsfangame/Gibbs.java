@@ -58,12 +58,6 @@ public class Gibbs extends RLDSprite {
 		
 		
 		this.positionX = GameScene.WIDTH/2-width/2;
-		
-		if( positionY > 800 )
-		{
-			//TODO fell off, reset.
-			GameManager.getInstance().createNewGame();
-		}
 	}
 
 	@Override
