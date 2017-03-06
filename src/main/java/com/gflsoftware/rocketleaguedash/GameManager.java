@@ -1,10 +1,10 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.orinsoftware.gibbsfangame.fxui.GameScene;
+import com.gflsoftware.rocketleaguedash.fxui.GameScene;
 
 import javafx.scene.canvas.GraphicsContext;
 
@@ -12,16 +12,16 @@ public class GameManager {
 
 	private static GameManager instance;
 	
-	private Gibbs gibbs;
+	private Player player;
 	private PlayerCamera camera;
-	private List<RLDSprite> gameObjects;
+	private List<RLDObject> gameObjects;
 	private PlatformFactory pFactory;
 	
 	private GameManager() {
-		gibbs = new Gibbs(0,200);
-		camera = new PlayerCamera( gibbs );
-		gameObjects = new ArrayList<RLDSprite>();
-		gameObjects.add( gibbs );
+		player = new Player(0,200);
+		camera = new PlayerCamera( player );
+		gameObjects = new ArrayList<RLDObject>();
+		gameObjects.add( player );
 		pFactory = PlatformFactory.getInstance();
 	}
 	
@@ -32,7 +32,7 @@ public class GameManager {
 		return instance;
 	}
 	
-	public void addObject( RLDSprite obj )
+	public void addObject( RLDObject obj )
 	{
 		gameObjects.add(obj);
 	}
@@ -48,9 +48,9 @@ public class GameManager {
 	{
 		
 		gameObjects.stream().forEach( obj -> {
-			if(obj != gibbs)
+			if(obj != player)
 			{
-				obj.setVelocityX(-gibbs.getVelocityX());
+				obj.setVelocityX(-player.getVelocityX());
 
 			}
 			obj.update(delta); 
@@ -62,12 +62,12 @@ public class GameManager {
 		gameObjects.add(pFactory.generatePlatform( Math.random() * 100 < 12 )); //12% chance of peanut?
 	}
 	
-	public Gibbs getPlayer()
+	public Player getPlayer()
 	{
-		return gibbs;
+		return player;
 	}
 	
-	public List<RLDSprite> getObjects()
+	public List<RLDObject> getObjects()
 	{
 		return gameObjects;
 	}
@@ -79,11 +79,11 @@ public class GameManager {
 	
 	public void createNewGame()
 	{
-		gibbs = new Gibbs(0,200);
-		gibbs.setPositionX(0);
-		gibbs.setPositionY(200);
+		player = new Player(0,200);
+		player.setPositionX(0);
+		player.setPositionY(200);
 		gameObjects.clear();
-		gameObjects.add(gibbs);
+		gameObjects.add(player);
 		addObject( new Platform(GameScene.WIDTH/2, 300) );
 		generateNewPlatform();
 		
@@ -93,7 +93,7 @@ public class GameManager {
 //		System.out.println("Cleared");
 	}
 	
-	public static void compareObjects( Gibbs s, RLDSprite g )
+	public static void compareObjects( Player s, RLDObject g )
 	{
 		PrintStream o = System.out;
 		

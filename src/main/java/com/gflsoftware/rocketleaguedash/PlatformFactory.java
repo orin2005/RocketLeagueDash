@@ -1,4 +1,4 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class PlatformFactory {
 		
 		double maxOfX = GameManager.getInstance().getObjects().stream().mapToDouble( platform -> platform.getPositionX() ).max().getAsDouble();
 		
-		RLDSprite p = GameManager.getInstance().getObjects().stream().filter( platform -> platform.getPositionX() == maxOfX).findFirst().get();
+		RLDObject p = GameManager.getInstance().getObjects().stream().filter( platform -> platform.getPositionX() == maxOfX).findFirst().get();
 		
 		double xCoordinate = maxOfX + Platform.WIDTH + 100;
 		

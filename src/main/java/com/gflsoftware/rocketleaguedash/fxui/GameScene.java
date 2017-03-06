@@ -1,10 +1,13 @@
-package com.orinsoftware.gibbsfangame.fxui;
+package com.gflsoftware.rocketleaguedash.fxui;
 
-import com.orinsoftware.gibbsfangame.BoostPeanut;
-import com.orinsoftware.gibbsfangame.GameManager;
-import com.orinsoftware.gibbsfangame.Gibbs;
-import com.orinsoftware.gibbsfangame.Platform;
-import com.orinsoftware.gibbsfangame.RLDSprite;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gflsoftware.rocketleaguedash.BoostPeanut;
+import com.gflsoftware.rocketleaguedash.GameManager;
+import com.gflsoftware.rocketleaguedash.Platform;
+import com.gflsoftware.rocketleaguedash.Player;
+import com.gflsoftware.rocketleaguedash.RLDObject;
 
 import javafx.scene.canvas.Canvas;
 
@@ -66,35 +69,40 @@ public class GameScene extends Canvas {
 	private void checkCollisions()
 	{
 		
-		Gibbs gibbs = manager.getPlayer();
+		Player player = manager.getPlayer();
 	
 		boolean shouldBeFalling = true;
-		for( RLDSprite object : manager.getObjects() )
+		List<RLDObject> objsToRemove = new ArrayList<RLDObject>();
+		for( RLDObject object : manager.getObjects() )
 		{
 			
-			if( gibbs.intersects(object) && gibbs != object )
+			if( player.intersects(object) && player != object )
 			{
 				//System.out.println("Intersect with " + object);
-				//GameManager.compareObjects(gibbs, object);
+				//GameManager.compareObjects(player, object);
 				if( object instanceof Platform )
 				{
 					Platform platform = (Platform)object;					
-					if( gibbs.getVelocityY() >= 0)
+					if( player.getVelocityY() >= 0)
 					{
-						gibbs.setPositionY( platform.getPositionY() - gibbs.getHeight()+1 );
+						player.setPositionY( platform.getPositionY() - player.getHeight()+1 );
 						shouldBeFalling = false;
-						gibbs.setDoubleJump(true);
+						player.setDoubleJump(true);
 					}
 				}
 				else
 				{
 					BoostPeanut peanut = (BoostPeanut)object;
 					peanut.setPickedUp( true );
-					gibbs.consume(peanut);
+					player.consume( peanut );
+					objsToRemove.add(peanut);
 				}
+				
 			}
 		}
-		gibbs.setFalling(shouldBeFalling);
+		
+		manager.getObjects().removeAll( objsToRemove );
+		player.setFalling(shouldBeFalling);
 	}
 	
 

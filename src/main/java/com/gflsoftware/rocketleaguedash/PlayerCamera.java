@@ -1,14 +1,14 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 public class PlayerCamera {
 
 	private double x;
 	private double y;
 	
-	private Gibbs gibbs;
+	private Player gibbs;
 	
 	
-	public PlayerCamera( Gibbs gibbs ) {
+	public PlayerCamera( Player gibbs ) {
 		// TODO Auto-generated constructor stub
 		this.gibbs = gibbs;
 		x = this.gibbs.getPositionX() - 800/2;

@@ -1,8 +1,8 @@
-package com.orinsoftware.gibbsfangame.fxui;
+package com.gflsoftware.rocketleaguedash.fxui;
 
-import com.orinsoftware.gibbsfangame.GameManager;
-import com.orinsoftware.gibbsfangame.KeyboardManager;
-import com.orinsoftware.gibbsfangame.KeyboardManager.Directions;
+import com.gflsoftware.rocketleaguedash.GameManager;
+import com.gflsoftware.rocketleaguedash.KeyboardManager;
+import com.gflsoftware.rocketleaguedash.KeyboardManager.Directions;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -22,7 +22,7 @@ public class MainStage extends Application{
 	@SuppressWarnings("restriction")
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Gibbs RL Dash!");
+		primaryStage.setTitle("Jon Sandman's RL Dash!");
 		
 		primaryStage.setResizable(false);
 	
@@ -50,15 +50,13 @@ public class MainStage extends Application{
 		
 		theScene.setOnKeyReleased( evt -> {
 			
-			switch(evt.getCode())
+			switch( evt.getCode() )
 			{
-			case RIGHT:
-				KeyboardManager.getInstance().setDirection(Directions.NONE);
-				break;
+				case RIGHT:
+					KeyboardManager.getInstance().setDirection(Directions.NONE);
+					break;
 			}
 		});
-		
-		//theScene.setCamera(new PerspectiveCamera());
 		
 		final long lastNanoTime = System.nanoTime();
 		

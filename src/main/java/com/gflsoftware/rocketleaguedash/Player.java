@@ -1,12 +1,12 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
-import com.orinsoftware.gibbsfangame.fxui.GameScene;
+import com.gflsoftware.rocketleaguedash.fxui.GameScene;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class Gibbs extends RLDSprite {
+public class Player extends RLDObject {
 	
 	private static final double ACCELERATION = 10;
 	private static final double DECELERATION = 1;
@@ -28,7 +28,7 @@ public class Gibbs extends RLDSprite {
 	private boolean doubleJump;
 	
 	
-	public Gibbs(double x, double y) {
+	public Player(double x, double y) {
 		super(null, x, y, 0, 0, WIDTH, HEIGHT);
 		falling = true;
 		doubleJump = true;
@@ -229,7 +229,7 @@ public class Gibbs extends RLDSprite {
 				.toString();
 	}
 	
-	public boolean notEquals(RLDSprite obj)
+	public boolean notEquals(RLDObject obj)
 	{
 		return !(this == obj);
 	}

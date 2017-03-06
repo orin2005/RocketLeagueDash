@@ -1,10 +1,10 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-public abstract class RLDSprite {
+public abstract class RLDObject {
 	
 	protected Image image;
 	protected double positionX;
@@ -14,7 +14,7 @@ public abstract class RLDSprite {
 	protected double width;
 	protected double height;
 
-	public RLDSprite(Image image,
+	public RLDObject(Image image,
 			double positionX,
 			double positionY,
 			double velocityX,
@@ -42,7 +42,7 @@ public abstract class RLDSprite {
 		return new Rectangle2D(positionX, positionY, width, height);
 	}
 	
-	public boolean intersects(RLDSprite s)
+	public boolean intersects(RLDObject s)
 	{
 		return s.getBoundary().intersects( this.getBoundary() );
 	}

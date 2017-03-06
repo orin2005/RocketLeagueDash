@@ -1,10 +1,10 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class BoostPeanut extends RLDSprite 
+public class BoostPeanut extends RLDObject 
 {
 	
 	private static double WIDTH = 20;

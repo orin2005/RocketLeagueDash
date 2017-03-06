@@ -1,11 +1,11 @@
-package com.orinsoftware.gibbsfangame;
+package com.gflsoftware.rocketleaguedash;
 
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public final class Platform extends RLDSprite{
+public final class Platform extends RLDObject{
 
 	public static final double WIDTH = 500;
 	
